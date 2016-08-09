@@ -31,7 +31,8 @@
   function removeSponsoredPost(element) {
       if (element) {
         element.parentNode.removeChild(element)
-        console.log('Remove Sponsored Post')
+        removedSponsoredContentCount++
+        console.log('Remove Sponsored Post #' + removedSponsoredContentCount)
       }
   }
 
