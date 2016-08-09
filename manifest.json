@@ -1,0 +1,24 @@
+{
+  "name": "AdBlocker for Facebook",
+  "short_name": "fBlock",
+  "version": "1.0.0",
+  "description": "Hide all ads on Facebook. AdBlocker Sponsored Posts Removal.",
+  "manifest_version": 2,
+  "icons": {
+    "128": "images/shield_green.png"
+  },
+  "page_action": {
+    "default_icon": "images/shield_green.png",
+    "default_title": "Blocking ads on this page"
+  },
+  "permissions": [
+    "tabs"
+  ],
+  "content_scripts": [
+     {
+       "matches": ["http://*.facebook.com/*", "https://*.facebook.com/*"],
+       "js": ["scripts/facebook-adblocker.js"],
+       "run_at": "document_end"
+     }
+  ]
+}
