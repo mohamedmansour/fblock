@@ -16,7 +16,8 @@
               // Since Facebook is using react, they are just batching
               // each post dom while inserting, so we can just remove the
               // mutated dom which resembles the post.
-              removeSponsoredPost(node.querySelector('.uiStreamSponsoredLink'))
+              removeSponsoredPost(findAttributeAncestor(node.querySelector('.uiStreamSponsoredLink'), 'aria-label', 'Story'))
+              removeSponsoredPost(document.querySelector('.ego_column'))
             }
           }
         }
@@ -29,11 +30,13 @@
   }
 
   function removeSponsoredPost(element) {
-      if (element) {
-        element.parentNode.removeChild(element)
-        removedSponsoredContentCount++
-        console.log('Remove Sponsored Post #' + removedSponsoredContentCount)
+      if (!element) {
+        return;
       }
+
+      removedSponsoredContentCount++
+      element.parentNode.removeChild(element)
+      console.log('Remove Sponsored Post #' + removedSponsoredContentCount)
   }
 
   function hideStaticSponsoredPosts() {
@@ -41,17 +44,27 @@
         sponsoredLinks = document.querySelectorAll('.uiStreamSponsoredLink')
 
     for (sponsoredIndex = 0; sponsoredIndex < sponsoredLinks.length; sponsoredIndex++) {
-      removeSponsoredPost(findAncestor(sponsoredLinks[sponsoredIndex], 'userContentWrapper'))
+      removeSponsoredPost(findAttributeAncestor(sponsoredLinks[sponsoredIndex], 'aria-label', 'Story'))
     }
   }
 
   function hideStaticSponsoredBar() {
-    removeSponsoredPost(document.querySelector('.ego_column'))
+    removeSponsoredPost(document.querySelector('#pagelet_ego_pane'))
   }
 
-  function findAncestor(element, className) {
-    while ((element = element.parentElement) && !element.classList.contains(className))
-    return element
+  function findAttributeAncestor(element, attributeName, attributeValue) {
+    if (!element) {
+      return null
+    }
+
+    while (element != null) {
+      if (element.getAttribute(attributeName) == attributeValue) {
+        return element
+      }
+      element = element.parentNode
+    }
+
+    return null
   }
 
   return {
