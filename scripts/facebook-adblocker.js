@@ -4,8 +4,8 @@
   // For new posts being added to the DOM, remove the sponsored posts.
   function hideDynamicSponsoredPosts() {
     var addedNodeIndex = 0,
-        observer = undefined,
-        node = undefined
+      observer = undefined,
+      node = undefined
 
     observer = new MutationObserver(function (mutations) {
       mutations.forEach(function (mutationNode) {
@@ -30,18 +30,18 @@
   }
 
   function removeSponsoredPost(element) {
-      if (!element) {
-        return;
-      }
+    if (!element) {
+      return;
+    }
 
-      removedSponsoredContentCount++
-      element.parentNode.removeChild(element)
-      console.log('Remove Sponsored Post #' + removedSponsoredContentCount)
+    removedSponsoredContentCount++
+    element.parentNode.removeChild(element)
+    updateBadge(element)
   }
 
   function hideStaticSponsoredPosts() {
     var sponsoredIndex = 0,
-        sponsoredLinks = document.querySelectorAll('.uiStreamSponsoredLink')
+      sponsoredLinks = document.querySelectorAll('.uiStreamSponsoredLink')
 
     for (sponsoredIndex = 0; sponsoredIndex < sponsoredLinks.length; sponsoredIndex++) {
       removeSponsoredPost(findAttributeAncestor(sponsoredLinks[sponsoredIndex], 'aria-label', 'Story'))
@@ -67,8 +67,13 @@
     return null
   }
 
+  function updateBadge(removedElement) {
+    console.log('Remove Sponsored Post #' + removedSponsoredContentCount)
+    chrome.runtime.sendMessage({type: 'SetBadgeNumber', data: removedSponsoredContentCount})
+  }
+
   return {
-    initialize: function() {
+    initialize: function () {
       hideDynamicSponsoredPosts()
       hideStaticSponsoredPosts()
       hideStaticSponsoredBar()
