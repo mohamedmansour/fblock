@@ -6,6 +6,8 @@ What does it do?
 
 Hides all sponsored ads from Facebook. Shows the counter of hidden ads on the extension icon.
 
+![image](https://github.com/mohamedmansour/fblock/blob/master/images/mo.png)
+
 Why did I do it?
 ================
 
