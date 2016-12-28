@@ -16,7 +16,7 @@
               // Since Facebook is using react, they are just batching
               // each post dom while inserting, so we can just remove the
               // mutated dom which resembles the post.
-              removeSponsoredPost(findAttributeAncestor(node.querySelector('.uiStreamSponsoredLink'), 'aria-label', 'Story'))
+              removeSponsoredPost(findAttributeAncestor(node.querySelector('.uiStreamAdditionalLogging'), 'data-testid', 'fbfeed_story'))
               removeSponsoredPost(document.querySelector('.ego_column'))
             }
           }
@@ -30,9 +30,8 @@
   }
 
   function removeSponsoredPost(element) {
-    if (!element) {
+    if (!element)
       return;
-    }
 
     removedSponsoredContentCount++
     element.parentNode.removeChild(element)
@@ -41,10 +40,10 @@
 
   function hideStaticSponsoredPosts() {
     var sponsoredIndex = 0,
-      sponsoredLinks = document.querySelectorAll('.uiStreamSponsoredLink')
+      sponsoredLinks = document.querySelectorAll('.uiStreamAdditionalLogging')
 
     for (sponsoredIndex = 0; sponsoredIndex < sponsoredLinks.length; sponsoredIndex++) {
-      removeSponsoredPost(findAttributeAncestor(sponsoredLinks[sponsoredIndex], 'aria-label', 'Story'))
+      removeSponsoredPost(findAttributeAncestor(sponsoredLinks[sponsoredIndex], 'data-testid', 'fbfeed_story'))
     }
   }
 
@@ -53,14 +52,13 @@
   }
 
   function findAttributeAncestor(element, attributeName, attributeValue) {
-    if (!element) {
+    if (!element)
       return null
-    }
 
     while (element != null) {
-      if (element.getAttribute(attributeName) == attributeValue) {
+      if (element.getAttribute(attributeName) == attributeValue)
         return element
-      }
+
       element = element.parentNode
     }
 
