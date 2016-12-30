@@ -14,7 +14,7 @@
   },
   "permissions": ["tabs", "declarativeContent"],
   "background": {
-    "scripts": ["scripts/page-browser-action.js", "scripts/background.js"],
+    "scripts": ["scripts/background.js"],
     "persistent": false
   },
   "content_scripts": [

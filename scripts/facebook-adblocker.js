@@ -5,13 +5,15 @@
   // When developing, makes it easier to locate the ads by drawing an area on top.
   // That allows us to see what we extracted and act upon it.
   function injectDebugCss() {
+    console.log('AdBlocker for Facebook (fBlock) Activated!')
+
     if (debugMode) {
       document
         .styleSheets[0]
-          .insertRule('[data-testid="fbfeed_story"]:before { content: attr(data-content); }', 0);
+          .insertRule('[data-testid="fbfeed_story"]:before { content: attr(data-content); }', 0)
       document
         .styleSheets[0]
-          .insertRule('.ego_column:before { content: attr(data-content); }', 0);
+          .insertRule('.ego_column:before { content: attr(data-content); }', 0)
     }
   }
 
