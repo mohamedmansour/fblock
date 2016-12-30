@@ -37,7 +37,12 @@
                 findAttributeAncestor(node.querySelector('.uiStreamAdditionalLogging'),
                                       'data-testid', 
                                       'fbfeed_story'))
+
               removeSponsoredPostSidebar(node.querySelector('.ego_column'))
+
+              // Sidebar Ads are a react component
+              if (node.classList.contains('ego_column'))
+                removeSponsoredPostSidebar(node)
             }
           }
         }
