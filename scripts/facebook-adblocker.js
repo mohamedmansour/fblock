@@ -1,6 +1,6 @@
 (function () {
   var debugMode = true
-  var removedSponsoredContentCount = 0
+  var blockedAds = []
 
   // When developing, makes it easier to locate the ads by drawing an area on top.
   // That allows us to see what we extracted and act upon it.
@@ -14,6 +14,9 @@
       document
         .styleSheets[0]
           .insertRule('.ego_column:before { content: attr(data-content); }', 0)
+      document
+        .styleSheets[0]
+          .insertRule('.ego_unit:before { content: attr(data-content); }', 0)
     }
   }
 
@@ -56,7 +59,7 @@
 
   function removeSponsoredPostFeed(element) {
     if (!element)
-      return;
+      return
 
     var domPostId = element.querySelector('[name="ft_ent_identifier"]')
     var domThumbnail = element.querySelector('img')
@@ -66,33 +69,40 @@
       domAuthor = element.querySelector('h5 a')
 
     var post = {
-      id: domPostId.value,
-      author: domAuthor.pathname,
-      thumbnail: domThumbnail.src 
+      url: '//www.facebook.com' + domAuthor.pathname + 'posts/' + domPostId.value,
+      author: domAuthor.innerText,
+      thumbnail: domThumbnail.src
     }
+    post.debugText = post.url + ':' + post.author + ':' + post.thumbnail
 
-    removeSponsoredPost(element, post.id + post.author + post.thumbnail)
+    removeSponsoredPost(element, post)
   }
 
   function removeSponsoredPostSidebar(element) {
     if (!element)
-      return;
+      return
 
-    removeSponsoredPost(element, 'SIDEBAR')
+    var  domAdUnits = element.querySelectorAll('.ego_unit')
+    domAdUnits.forEach(function(domAdUnit) {
+      removeSponsoredPost(domAdUnit, {debugText: 'SIDE AD'})
+    })
+
+    removeSponsoredPost(element, {debugText: 'SIDEBAR CONTAINER ADS'}, true)
   }
 
-  function removeSponsoredPost(element, reason) {
-    removedSponsoredContentCount++
-
+  function removeSponsoredPost(element, post, supressReporting) {
     if (debugMode) {
       element.style.outline = '2px solid red'
-      element.setAttribute('data-content', reason)
+      element.setAttribute('data-content', post.debugText)
     }
     else {
       element.parentNode.removeChild(element)
     }
 
-    updateBadge(element)
+    if (!supressReporting) {
+      blockedAds.push(post)
+      chrome.runtime.sendMessage({type: 'SetBadgeNumber', data: blockedAds.length})
+    }
   }
 
   function hideStaticSponsoredPosts() {
@@ -106,7 +116,7 @@
   }
 
   function hideStaticSponsoredBar() {
-    removeSponsoredPostSidebar(document.querySelector('#pagelet_ego_pane'))
+    removeSponsoredPostSidebar(document.querySelector('.ego_column'))
   }
 
   function findAttributeAncestor(element, attributeName, attributeValue) {
@@ -122,18 +132,18 @@
 
     return null
   }
-
-  function updateBadge(removedElement) {
-    chrome.runtime.sendMessage({type: 'SetBadgeNumber', data: removedSponsoredContentCount})
-  }
-
+  
   function setupMessaging() {
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       switch (message.type) {
         case 'Reset':
-          removedSponsoredContentCount = 0
+          blockedAds = []
+          sendResponse({})
           break
+        case 'BlockedAds':
+          sendResponse({type: 'blockedAds', data: blockedAds})
         default:
+          sendResponse({})
           break
       }
     })
