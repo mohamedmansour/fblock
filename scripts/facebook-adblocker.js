@@ -127,9 +127,22 @@
     chrome.runtime.sendMessage({type: 'SetBadgeNumber', data: removedSponsoredContentCount})
   }
 
+  function setupMessaging() {
+    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+      switch (message.type) {
+        case 'Reset':
+          removedSponsoredContentCount = 0
+          break
+        default:
+          break
+      }
+    })
+  }
+
   return {
     initialize: function () {
       injectDebugCss()
+      setupMessaging()
       hideDynamicSponsoredPosts()
       hideStaticSponsoredPosts()
       hideStaticSponsoredBar()
