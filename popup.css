@@ -1,0 +1,128 @@
+body {
+    width: 350px;
+    margin: 0;
+}
+
+h1 {
+    font-size: 18px;
+    display: inline-block;
+    margin: 0 0 0 10px;
+    line-height: 32px;
+}
+
+header {
+    padding: 15px;
+}
+
+header img {
+    vertical-align: top;
+}
+
+section {
+    border-top: 1px solid #ddd;
+    padding: 15px;
+    min-height: 35px;
+    display: flex;
+    align-items: center;
+}
+
+.setting {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.setting-name {
+    flex: 1;
+}
+
+#see-all,
+#total-ads {
+    color: #3D5A98;
+    font-weight: bold;
+}
+
+#see-all,
+#see-all-list {
+    display: none;
+}
+
+footer {
+    background-color: #eee;
+    height: 50px;
+    border-top: 1px solid #ddd;
+}
+
+.footer-button {
+    float: left;
+    height: inherit;
+    line-height: 50px;
+    width: 174px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.footer-button:first-child {
+    border-right: 1px solid #ddd;
+}
+
+.footer-button:hover {
+    background-color: #ddd;
+}
+
+/** 
+    Inspired by http://callmenick.com/post/css-toggle-switch-examples 
+    Modified to make it smaller and different style
+**/
+input {
+    position: absolute;
+    margin-left: -9999px;
+    visibility: hidden;
+}
+
+input + label {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    padding: 2px;
+    width: 60px;
+    height: 30px;
+    background-color: #dddddd;
+    border-radius: 30px;
+}
+
+input + label:before,
+input + label:after {
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    bottom: 1px;
+    content: "";
+}
+
+input + label:before {
+    right: 1px;
+    background-color: #f1f1f1;
+    border-radius: 30px;
+    transition: background 0.4s;
+}
+
+input + label:after {
+    width: 30px;
+    background-color: #fff;
+    border-radius: 100%;
+    transition: margin 0.4s;
+    border: 1px solid #ddd;
+}
+
+input:checked + label:before {
+    background-color: #3D5A98;
+}
+
+input:checked + label:after {
+    margin-left: 30px;
+    border: 2px solid #3D5A98;
+}

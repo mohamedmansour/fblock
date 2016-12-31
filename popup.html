@@ -1,10 +1,43 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link type="text/css" rel="stylesheet" href="popup.css">
     </head>
     <body>
-        <h1>Blocked</h1>
-        <ul id="blocked-list"></ul>
+        <header>
+            <img src="images/icon32.png" />
+            <h1>AdBlocker for Facebook</h1>
+        </header>
+        <main>
+            <section>
+                <div class="setting">
+                    <div class="setting-name">
+                        Allow AdBlocker
+                    </div>
+                    <div class="setting-control">
+                        <input id="allow-switch" type="checkbox" checked name="allow-switch" />
+                        <label for="allow-switch"></label>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="setting">
+                    <div class="setting-name">
+                        <span id="total-ads">0</span> on this page
+                    </div>
+                    <div class="setting-control">
+                        <span id="see-all">See All</span>
+                    </div>
+                </div>
+            </section>
+            <section id="see-all-list">
+                <ul id="blocked-list"></ul>
+            </section>
+        </main>
+        <footer>
+            <div id="footer-help" class="footer-button">Help and FAQ</div>
+            <div id="footer-feedback" class="footer-button">Send Feedback</div>
+        </footer>
         <script type="application/javascript" src="scripts/popup.js"></script>
     </body>
 </html>

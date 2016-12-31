@@ -1,3 +1,7 @@
+var domBlockedList = document.querySelector('#blocked-list')
+var domTotalAds = document.querySelector('#total-ads')
+var domSeeAllAds = document.querySelector('#see-all')
+
 chrome.tabs.query({ active: true, currentWindow: true}, function(tabs) {
     if (!tabs.length)
         return
@@ -8,11 +12,14 @@ chrome.tabs.query({ active: true, currentWindow: true}, function(tabs) {
 })
 
 function renderBlockedAds(blockedAds) {
-    var blockedList = document.querySelector('#blocked-list')
+    domTotalAds.innerText = blockedAds.length
+
+    if (blockedAds.length > 0)
+        domSeeAllAds.style.display = 'inline'
 
     blockedAds.forEach(function(blockedAd) {
-        var listItem = document.createElement('li')
-        listItem.innerText = blockedAd.debugText
-        blockedList.appendChild(listItem)
+        var domListItem = document.createElement('li')
+        domListItem.innerText = blockedAd.debugText
+        domBlockedList.appendChild(domListItem)
     })
 }

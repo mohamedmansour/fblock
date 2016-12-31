@@ -67,7 +67,7 @@
 
     if (!domAuthor)
       domAuthor = element.querySelector('h5 a')
-
+    
     var post = {
       url: '//www.facebook.com' + domAuthor.pathname + 'posts/' + domPostId.value,
       author: domAuthor.innerText,
@@ -84,7 +84,14 @@
 
     var  domAdUnits = element.querySelectorAll('.ego_unit')
     domAdUnits.forEach(function(domAdUnit) {
-      removeSponsoredPost(domAdUnit, {debugText: 'SIDE AD'})
+      // TODO: Extract proper data safely.
+      var post = {
+        url: '//facebook.com',
+        author: 'facebook',
+        thumbnail: 'https://www.facebook.com/rsrc.php/v3/y9/r/lvqssrhcBZ0.png',
+        debugText: 'SIDE AD'
+      }
+      removeSponsoredPost(domAdUnit, post)
     })
 
     removeSponsoredPost(element, {debugText: 'SIDEBAR CONTAINER ADS'}, true)

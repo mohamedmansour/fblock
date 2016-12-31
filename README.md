@@ -6,7 +6,8 @@ What does it do?
 
 Hides all sponsored ads from Facebook. Shows the counter of hidden ads on the extension icon.
 
-![image](https://github.com/mohamedmansour/fblock/blob/master/images/mo.png)
+![image](https://github.com/mohamedmansour/fblock/blob/master/images/screenshot.png)
+![image](https://github.com/mohamedmansour/fblock/blob/master/images/screenshot-popup.png)
 
 Why did I do it?
 ================
@@ -27,6 +28,11 @@ You can fork this project and add it manually if you want too, chrome://extensio
 Any questions?
 =============
 Contact me on Twitter https://twitter.com/mohamedmansour.com
+
+Contributors
+============
+ * Developed by Mohamed Mansour
+ * Designed by Eren Song
 
 Have fun!
 
