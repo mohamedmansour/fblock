@@ -26,11 +26,10 @@
         len = Math.floor(Math.random() * 5) + 2
 
     for (i=0; i < len; i++)
-        text += allowed.charAt(Math.floor(Math.random() * allowed.length));
+        text += allowed.charAt(Math.floor(Math.random() * allowed.length))
     
     return text
   }
-
 
   // For new posts being added to the DOM, remove the sponsored posts.
   function hideDynamicSponsoredPosts() {
@@ -195,16 +194,13 @@
     })
   }
 
-  return {
-    initialize: function () {
-      injectCss()
-      setupMessaging(function() {
-        console.log('AdBlocker for Facebook (fBlock) Activated! Currently ' + 
-          (blockingEnabled ? 'enabled' : 'disabled'))
-        hideDynamicSponsoredPosts()
-        hideStaticSponsoredPosts()
-        hideStaticSponsoredBar()
-      })
-    }
-  }
-})().initialize()
+  // Main
+  injectCss()
+  setupMessaging(function() {
+    console.log('AdBlocker for Facebook (fBlock) Activated! Currently ' + 
+      (blockingEnabled ? 'enabled' : 'disabled'))
+    hideDynamicSponsoredPosts()
+    hideStaticSponsoredPosts()
+    hideStaticSponsoredBar()
+  })
+})()
