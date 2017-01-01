@@ -7,7 +7,13 @@ var domSeeAllAds = document.querySelector('#see-all')
 var domSeeAllAdsList = document.querySelector('#see-all-list')
 var domTotalAds = document.querySelector('#total-ads')
 
+document.querySelector('#footer-github').addEventListener('click', onFooterButtonClicked, false)
+document.querySelector('#footer-feedback').addEventListener('click', onFooterButtonClicked, false)
 chrome.tabs.query({ active: true, currentWindow: true}, onCurrentTabFound)
+
+function onFooterButtonClicked() {
+    window.open(this.href)
+}
 
 function onCurrentTabFound(tabs) {
     if (!tabs.length)

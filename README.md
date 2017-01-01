@@ -31,8 +31,8 @@ Contact me on Twitter https://twitter.com/mohamedmansour.com
 
 Contributors
 ============
- * Developed by Mohamed Mansour
- * Designed by Eren Song
+- Developed by Mohamed Mansour
+- Designed by Eren Song
 
 Have fun!
 

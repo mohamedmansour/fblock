@@ -105,7 +105,7 @@
       removeSponsoredPost(domAdUnit, post)
     })
 
-    removeSponsoredPost(element, {debugText: 'SIDEBAR CONTAINER ADS'}, true)
+    removeSponsoredPost(element, { debugText: 'SIDEBAR CONTAINER ADS'}, true)
   }
 
   function removeSponsoredPost(element, post, supressReporting) {
@@ -121,7 +121,7 @@
 
     if (!supressReporting) {
       blockedAds.push(post)
-      chrome.runtime.sendMessage({type: 'SetBadgeNumber', data: blockedAds.length})
+      chrome.runtime.sendMessage({ type: 'SetBadgeNumber', data: blockedAds.length })
     }
   }
 
