@@ -1,24 +1,36 @@
 (function () {
+  var blockingEnabled = true
   var debugMode = true
   var blockedAds = []
+  var classNameForAd = generateRandomClassName()
+  var classNameForHiding = generateRandomClassName()
 
   // When developing, makes it easier to locate the ads by drawing an area on top.
   // That allows us to see what we extracted and act upon it.
-  function injectDebugCss() {
-    console.log('AdBlocker for Facebook (fBlock) Activated!')
+  function injectCss() {
+    document
+        .styleSheets[0]
+          .insertRule('.' + classNameForHiding +' { display: none }', 0)
 
     if (debugMode) {
       document
         .styleSheets[0]
-          .insertRule('[data-testid="fbfeed_story"]:before { content: attr(data-content); }', 0)
-      document
-        .styleSheets[0]
-          .insertRule('.ego_column:before { content: attr(data-content); }', 0)
-      document
-        .styleSheets[0]
-          .insertRule('.ego_unit:before { content: attr(data-content); }', 0)
+          .insertRule('.' + classNameForAd +':before { content: attr(data-content) }', 0)
     }
   }
+
+  function generateRandomClassName() {
+    var text = '_',
+        allowed = '0123456789abcdefghijklmnopqrstuvwxyz',
+        i = 0,
+        len = Math.floor(Math.random() * 5) + 2
+
+    for (i=0; i < len; i++)
+        text += allowed.charAt(Math.floor(Math.random() * allowed.length));
+    
+    return text
+  }
+
 
   // For new posts being added to the DOM, remove the sponsored posts.
   function hideDynamicSponsoredPosts() {
@@ -98,13 +110,15 @@
   }
 
   function removeSponsoredPost(element, post, supressReporting) {
+    element.classList.add(classNameForAd)
+
     if (debugMode) {
       element.style.outline = '2px solid red'
       element.setAttribute('data-content', post.debugText)
     }
-    else {
-      element.parentNode.removeChild(element)
-    }
+
+    if (blockingEnabled)
+      element.classList.add(classNameForHiding)
 
     if (!supressReporting) {
       blockedAds.push(post)
@@ -139,16 +153,41 @@
 
     return null
   }
-  
-  function setupMessaging() {
+
+  function setAdVisibility(enabled) {
+    var renderedAds = document.querySelectorAll('.' + classNameForAd)
+    renderedAds.forEach(function(renderedAd) {
+      if (enabled) 
+        renderedAd.classList.add(classNameForHiding)
+      else
+        renderedAd.classList.remove(classNameForHiding)
+    })
+    blockingEnabled = enabled
+  }
+
+  function setupMessaging(ready) {
+    chrome.storage.sync.get('disabled', function (items) {
+      if (items.disabled !== undefined)
+        blockingEnabled = !items.disabled
+
+      ready()
+    })
+
+    chrome.storage.onChanged.addListener(function(changes, namespace) {
+      for (key in changes) {
+        if (key === 'disabled')
+          setAdVisibility(!changes[key].newValue)
+      }
+    })
     chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       switch (message.type) {
         case 'Reset':
           blockedAds = []
           sendResponse({})
           break
-        case 'BlockedAds':
-          sendResponse({type: 'blockedAds', data: blockedAds})
+        case 'List':
+          sendResponse({ data: blockedAds })
+          break
         default:
           sendResponse({})
           break
@@ -158,11 +197,14 @@
 
   return {
     initialize: function () {
-      injectDebugCss()
-      setupMessaging()
-      hideDynamicSponsoredPosts()
-      hideStaticSponsoredPosts()
-      hideStaticSponsoredBar()
+      injectCss()
+      setupMessaging(function() {
+        console.log('AdBlocker for Facebook (fBlock) Activated! Currently ' + 
+          (blockingEnabled ? 'enabled' : 'disabled'))
+        hideDynamicSponsoredPosts()
+        hideStaticSponsoredPosts()
+        hideStaticSponsoredBar()
+      })
     }
   }
 })().initialize()

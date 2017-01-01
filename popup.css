@@ -70,6 +70,15 @@ footer {
     background-color: #ddd;
 }
 
+
+#allow-switch-control {
+    display: none;
+}
+
+#see-all {
+    cursor: pointer;
+}
+
 /** 
     Inspired by http://callmenick.com/post/css-toggle-switch-examples 
     Modified to make it smaller and different style

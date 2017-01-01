@@ -12,7 +12,7 @@
     "default_title": "AdBlocker for Facebook",
     "default_popup": "popup.html"
   },
-  "permissions": ["tabs", "declarativeContent"],
+  "permissions": ["tabs", "storage", "declarativeContent"],
   "background": {
     "scripts": ["scripts/background.js"],
     "persistent": false
