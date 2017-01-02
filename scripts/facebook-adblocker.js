@@ -97,11 +97,11 @@
     domAdUnits.forEach(function(domAdUnit) {
       // TODO: Extract proper data safely.
       var post = {
-        url: '//facebook.com',
-        author: 'facebook',
-        thumbnail: 'https://www.facebook.com/rsrc.php/v3/y9/r/lvqssrhcBZ0.png',
-        debugText: 'SIDE AD'
+        url: domAdUnit.querySelector('a[target="_blank"]').href,
+        author: domAdUnit.querySelector('strong').innerText,
+        thumbnail: domAdUnit.querySelector('img').src
       }
+      post.debugText = post.url + ':' + post.author + ':' + post.thumbnail
       removeSponsoredPost(domAdUnit, post)
     })
 

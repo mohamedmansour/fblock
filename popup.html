@@ -6,7 +6,7 @@
     <body>
         <header>
             <img src="images/icon32.png" />
-            <h1>AdBlocker for Facebook</h1>
+            <h1>AdBlocker for Facebook <span id="version"></span></h1>
         </header>
         <main>
             <section>
@@ -23,7 +23,9 @@
             <section>
                 <div class="setting">
                     <div class="setting-name">
-                        <span id="total-ads">0</span> on this page
+                        <span id="total-ads">No</span> <span id="total-ads-text">
+                            ads on this page
+                        </span> 
                     </div>
                     <div class="setting-control">
                         <a id="see-all">See All</a>
@@ -42,6 +44,11 @@
                 Send Feedback
             </a>
         </footer>
+        <div type-"template/text" id="tpl-blocked-item">
+            <img class="blocked-item-img" src="{thumbnail}" />
+            <span class="blocked-item-name">{author}</span>
+            <a class="blocked-item-url" href="{url}">show</a>
+        </div>
         <script type="application/javascript" src="scripts/popup.js"></script>
     </body>
 </html>

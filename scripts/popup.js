@@ -6,12 +6,17 @@ var domBlockedList = document.querySelector('#blocked-list')
 var domSeeAllAds = document.querySelector('#see-all')
 var domSeeAllAdsList = document.querySelector('#see-all-list')
 var domTotalAds = document.querySelector('#total-ads')
+var domTotalAdsText = document.querySelector('#total-ads-text')
+var domVersion = document.querySelector('#version')
 
-document.querySelector('#footer-github').addEventListener('click', onFooterButtonClicked, false)
-document.querySelector('#footer-feedback').addEventListener('click', onFooterButtonClicked, false)
+var tplBlockedItem = document.querySelector('#tpl-blocked-item').innerHTML
+
+domVersion.innerText = chrome.runtime.getManifest().version
+document.querySelector('#footer-github').addEventListener('click', onOpenHref, false)
+document.querySelector('#footer-feedback').addEventListener('click', onOpenHref, false)
 chrome.tabs.query({ active: true, currentWindow: true}, onCurrentTabFound)
 
-function onFooterButtonClicked() {
+function onOpenHref() {
     window.open(this.href)
 }
 
@@ -32,6 +37,7 @@ function onCurrentTabFound(tabs) {
 function onStorage(items) {
     if (items.disabled !== undefined && items.disabled === true)
         domAllowSwitch.checked = false
+
     domAllowSwitchControl.style.display = 'block'
 }
 
@@ -45,14 +51,31 @@ function onSeeAllClicked() {
 }
 
 function renderBlockedAds(blockedAds) {
-    domTotalAds.innerText = blockedAds.length
+    var totalAds = blockedAds.length
+    var pluralAds = ''
 
-    if (blockedAds.length > 0)
+    if (totalAds > 0) {
         domSeeAllAds.style.display = 'inline'
+        domTotalAds.innerText = totalAds
+        
+        if (totalAds > 1) 
+            pluralAds = 's'
+
+        domTotalAdsText.innerText = 'ad' + pluralAds + ' on this page'
+    }
 
     blockedAds.forEach(function(blockedAd) {
+        var blockedItem = tplBlockedItem
+            .replace(/{author}/, blockedAd.author)
+            .replace(/{url}/, blockedAd.url)
+            .replace(/{thumbnail}/, blockedAd.thumbnail)
+
         var domListItem = document.createElement('li')
-        domListItem.innerText = blockedAd.debugText
+        domListItem.className = 'blocked-item'
+        domListItem.innerHTML = blockedItem
+
+        domListItem.querySelector('a').onclick = onOpenHref
+
         domBlockedList.appendChild(domListItem)
     })
 }
