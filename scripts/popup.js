@@ -1,3 +1,5 @@
+var browser = window.browser || chrome
+
 var currentTabId = undefined
 
 var domAllowSwitch = document.querySelector('#allow-switch')
@@ -11,10 +13,10 @@ var domVersion = document.querySelector('#version')
 
 var tplBlockedItem = document.querySelector('#tpl-blocked-item').innerHTML
 
-domVersion.innerText = chrome.runtime.getManifest().version
+domVersion.innerText = browser.runtime.getManifest().version
 document.querySelector('#footer-github').addEventListener('click', onOpenHref, false)
 document.querySelector('#footer-feedback').addEventListener('click', onOpenHref, false)
-chrome.tabs.query({ active: true, currentWindow: true}, onCurrentTabFound)
+browser.tabs.query({ active: true, currentWindow: true}, onCurrentTabFound)
 
 function onOpenHref() {
     window.open(this.href)
@@ -26,8 +28,8 @@ function onCurrentTabFound(tabs) {
 
     currentTabId = tabs[0].id
 
-    chrome.tabs.sendMessage(currentTabId, { type: 'List' }, function(response) {
-        chrome.storage.sync.get('disabled', onStorage)
+    browser.tabs.sendMessage(currentTabId, { type: 'List' }, function(response) {
+        browser.storage.local.get('disabled', onStorage)
         domAllowSwitch.addEventListener('click', onSwitchToggled, false)
         domSeeAllAds.addEventListener('click', onSeeAllClicked, false)
         renderBlockedAds(response.data)
@@ -42,7 +44,7 @@ function onStorage(items) {
 }
 
 function onSwitchToggled() {
-    chrome.storage.sync.set({'disabled': !domAllowSwitch.checked})
+    browser.storage.local.set({'disabled': !domAllowSwitch.checked})
 }
 
 function onSeeAllClicked() {

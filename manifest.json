@@ -1,14 +1,18 @@
 {
   "name": "AdBlocker for Facebook",
+  "author": "Mohamed Mansour",
   "short_name": "fBlock",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Hide all ads on Facebook. AdBlocker Sponsored Posts Removal.",
   "manifest_version": 2,
   "icons": {
     "128": "images/icon128.png"
   },
   "browser_action": {
-    "default_icon": "images/icon32-disabled.png",
+    "default_icon": {
+      "32": "images/icon32-disabled.png",
+      "40": "images/icon32-disabled.png"
+    },
     "default_title": "AdBlocker for Facebook",
     "default_popup": "popup.html"
   },

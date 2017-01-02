@@ -1,6 +1,8 @@
 (function () {
+  var browser = window.browser || chrome
+
   var blockingEnabled = true
-  var debugMode = true
+  var debugMode = false
   var blockedAds = []
   var classNameForAd = generateRandomClassName()
   var classNameForHiding = generateRandomClassName()
@@ -35,10 +37,13 @@
   function hideDynamicSponsoredPosts() {
     var addedNodeIndex = 0,
       observer = undefined,
-      node = undefined
+      node = undefined,
+      mutationIndex = 0,
+      mutationNode = undefined
 
     observer = new MutationObserver(function (mutations) {
-      mutations.forEach(function (mutationNode) {
+      for (mutationIndex = 0; mutationIndex < mutations.length; mutationIndex++) {
+        mutationNode = mutations[mutationIndex]
         if (mutationNode.addedNodes) {
           for (addedNodeIndex = 0; 
                addedNodeIndex < mutationNode.addedNodes.length; 
@@ -60,7 +65,7 @@
             }
           }
         }
-      })
+      }
     })
 
     // Just observe on the root of the body, that is where the widget will be rendered when it is
@@ -79,31 +84,53 @@
     if (!domAuthor)
       domAuthor = element.querySelector('h5 a')
     
-    var post = {
-      url: '//www.facebook.com' + domAuthor.pathname + 'posts/' + domPostId.value,
-      author: domAuthor.innerText,
-      thumbnail: domThumbnail.src
-    }
-    post.debugText = post.url + ':' + post.author + ':' + post.thumbnail
+    if (domPostId && domAuthor && domThumbnail) {
+      var post = {
+        url: 'https://www.facebook.com' + domAuthor.pathname + 'posts/' + domPostId.value,
+        author: domAuthor.innerText,
+        thumbnail: domThumbnail.src
+      }
+      post.debugText = post.url + ':' + post.author + ':' + post.thumbnail
 
-    removeSponsoredPost(element, post)
+      removeSponsoredPost(element, post)
+    }
+    else {
+      console.log('AdBlocker for Facebook', 'Parsing failed for sponsored posts, report to' +
+                  'developer please.')
+    }
   }
 
   function removeSponsoredPostSidebar(element) {
     if (!element)
       return
 
-    var  domAdUnits = element.querySelectorAll('.ego_unit')
-    domAdUnits.forEach(function(domAdUnit) {
-      // TODO: Extract proper data safely.
-      var post = {
-        url: domAdUnit.querySelector('a[target="_blank"]').href,
-        author: domAdUnit.querySelector('strong').innerText,
-        thumbnail: domAdUnit.querySelector('img').src
+    var domAdUnits = element.querySelectorAll('.ego_unit'),
+        adUnitIndex = 0,
+        domAdUnit = undefined,
+        domUrl = undefined,
+        domAuthor = undefined,
+        domThumbnail = undefined
+
+    for (adUnitIndex = 0; adUnitIndex < domAdUnits.length; adUnitIndex++) {
+      domAdUnit = domAdUnits[adUnitIndex]
+      domUrl = domAdUnit.querySelector('a[target="_blank"]')
+      domAuthor = domAdUnit.querySelector('strong')
+      domThumbnail = domAdUnit.querySelector('img')
+
+      if (domUrl && domAuthor && domThumbnail) {
+        var post = {
+          url: domUrl.href,
+          author: domAuthor.innerText,
+          thumbnail: domThumbnail.src
+        }
+        post.debugText = post.url + ':' + post.author + ':' + post.thumbnail
+        removeSponsoredPost(domAdUnit, post)
       }
-      post.debugText = post.url + ':' + post.author + ':' + post.thumbnail
-      removeSponsoredPost(domAdUnit, post)
-    })
+      else {
+        console.log('AdBlocker for Facebook', 'Parsing failed for sidebar posts, report to' +
+                    'developer please.')
+      }
+    }
 
     removeSponsoredPost(element, { debugText: 'SIDEBAR CONTAINER ADS'}, true)
   }
@@ -121,7 +148,7 @@
 
     if (!supressReporting) {
       blockedAds.push(post)
-      chrome.runtime.sendMessage({ type: 'SetBadgeNumber', data: blockedAds.length })
+      browser.runtime.sendMessage({ type: 'SetBadgeNumber', data: blockedAds.length })
     }
   }
 
@@ -154,31 +181,35 @@
   }
 
   function setAdVisibility(enabled) {
+    var renderedAdIndex = 0,
+        domRenderedAd = undefined
+
     var renderedAds = document.querySelectorAll('.' + classNameForAd)
-    renderedAds.forEach(function(renderedAd) {
+    for (renderedAdIndex = 0; renderedAdIndex < renderedAds.length; renderedAdIndex++) {
+      domRenderedAd = renderedAds[renderedAdIndex]
       if (enabled) 
-        renderedAd.classList.add(classNameForHiding)
+        domRenderedAd.classList.add(classNameForHiding)
       else
-        renderedAd.classList.remove(classNameForHiding)
-    })
+        domRenderedAd.classList.remove(classNameForHiding)
+    }
     blockingEnabled = enabled
   }
 
   function setupMessaging(ready) {
-    chrome.storage.sync.get('disabled', function (items) {
+    browser.storage.local.get('disabled', function (items) {
       if (items.disabled !== undefined)
         blockingEnabled = !items.disabled
 
       ready()
     })
 
-    chrome.storage.onChanged.addListener(function(changes, namespace) {
+    browser.storage.onChanged.addListener(function(changes, namespace) {
       for (key in changes) {
         if (key === 'disabled')
           setAdVisibility(!changes[key].newValue)
       }
     })
-    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    browser.runtime.onMessage.addListener(function(message, sender, sendResponse) {
       switch (message.type) {
         case 'Reset':
           blockedAds = []
