@@ -53,9 +53,7 @@
               // Since Facebook is using react, they are just batching each post dom while 
               // inserting, so we can just remove the mutated dom which resembles the post.
               removeSponsoredPostFeed(
-                findAttributeAncestor(node.querySelector('.uiStreamAdditionalLogging'),
-                                      'data-testid', 
-                                      'fbfeed_story'))
+                findAttributeAncestor(findSponsoredPost(node), 'data-testid', 'fbfeed_story'))
 
               removeSponsoredPostSidebar(node.querySelector('.ego_column'))
 
@@ -71,6 +69,40 @@
     // Just observe on the root of the body, that is where the widget will be rendered when it is
     // discovered.
     observer.observe(document.body, { childList: true, subtree: true })
+  }
+
+  function findSponsoredPost(node) {
+    var discoverArticle = undefined,
+        discoverText = undefined,
+        traversalAttempts = 5,
+        foundLink = false
+  
+    discoverArticle = node.querySelector('[role="article"]')
+
+    if (!discoverArticle)
+      return null
+
+    discoverArticle = node.querySelector('img')
+
+    if (!discoverArticle)
+      return null
+
+    while (traversalAttempts > 0) {
+       if (discoverArticle.nodeName === 'A')
+         foundLink = true
+
+      if (foundLink && discoverArticle.nodeName === 'DIV')
+        break
+
+       discoverArticle = discoverArticle.parentNode
+       traversalAttempts--
+    }
+
+    discoverText = discoverArticle.querySelector('div > span')
+    if (discoverText)
+      return discoverText.innerText.toLowerCase() === 'sponsored' ? discoverArticle : null
+
+    return null
   }
 
   function removeSponsoredPostFeed(element) {
@@ -154,11 +186,14 @@
 
   function hideStaticSponsoredPosts() {
     var sponsoredIndex = 0,
-      sponsoredLinks = document.querySelectorAll('.uiStreamAdditionalLogging')
+      sponsoredLinks = document.querySelectorAll('[role="article"]')
 
     for (sponsoredIndex = 0; sponsoredIndex < sponsoredLinks.length; sponsoredIndex++) {
       removeSponsoredPostFeed(
-        findAttributeAncestor(sponsoredLinks[sponsoredIndex], 'data-testid', 'fbfeed_story'))
+        findAttributeAncestor(
+          findSponsoredPost(sponsoredLinks[sponsoredIndex]),
+          'data-testid',
+          'fbfeed_story'))
     }
   }
 
