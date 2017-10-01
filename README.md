@@ -29,6 +29,13 @@ Any questions?
 =============
 Contact me on Twitter https://twitter.com/mohamedmansour.com
 
+Donations?
+==========
+Like this extension? If you would like to support the development or buy me tea, please donate to
+the Bitcoin or Ethereum addresses below. It would be awesome :)
+- Bitcoin: 1ouLq9V9VnsLL13nw7KjqMt8qydQx7Q1E
+- Ethereum: 0x34fbab4Fb1b09e1A85b845d346cD740C6748B408
+
 Contributors
 ============
 - Developed by Mohamed Mansour
