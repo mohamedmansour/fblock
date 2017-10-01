@@ -72,37 +72,11 @@
   }
 
   function findSponsoredPost(node) {
-    var discoverArticle = undefined,
-        discoverText = undefined,
-        traversalAttempts = 5,
-        foundLink = false
-  
-    discoverArticle = node.querySelector('[role="article"]')
-
-    if (!discoverArticle)
+    var iterator = findElementsByXPath('.//a[text()="Sponsored"]', node)
+    if (iterator.length)
+      return node
+    else
       return null
-
-    discoverArticle = node.querySelector('img')
-
-    if (!discoverArticle)
-      return null
-
-    while (traversalAttempts > 0) {
-       if (discoverArticle.nodeName === 'A')
-         foundLink = true
-
-      if (foundLink && discoverArticle.nodeName === 'DIV')
-        break
-
-       discoverArticle = discoverArticle.parentNode
-       traversalAttempts--
-    }
-
-    discoverText = discoverArticle.querySelector('div > span')
-    if (discoverText)
-      return discoverText.innerText.toLowerCase() === 'sponsored' ? discoverArticle : null
-
-    return null
   }
 
   function removeSponsoredPostFeed(element) {
@@ -174,9 +148,9 @@
       element.style.outline = '2px solid red'
       element.setAttribute('data-content', post.debugText)
     }
-
-    if (blockingEnabled)
+    else if (blockingEnabled) {
       element.classList.add(classNameForHiding)
+    }
 
     if (!supressReporting) {
       blockedAds.push(post)
@@ -186,7 +160,7 @@
 
   function hideStaticSponsoredPosts() {
     var sponsoredIndex = 0,
-      sponsoredLinks = document.querySelectorAll('[role="article"]')
+      sponsoredLinks = document.querySelectorAll('[data-testid="fbfeed_story"]')
 
     for (sponsoredIndex = 0; sponsoredIndex < sponsoredLinks.length; sponsoredIndex++) {
       removeSponsoredPostFeed(
@@ -201,11 +175,22 @@
     removeSponsoredPostSidebar(document.querySelector('.ego_column'))
   }
 
+  function findElementsByXPath(xpath, parent) {
+    let results = [],
+       query = document.evaluate(xpath, parent, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+
+    for (let i=0, length=query.snapshotLength; i<length; ++i) {
+      results.push(query.snapshotItem(i))
+    }
+
+    return results
+  }
+
   function findAttributeAncestor(element, attributeName, attributeValue) {
     if (!element)
       return null
 
-    while (element != null) {
+    while (element != null && element != document) {
       if (element.getAttribute(attributeName) == attributeValue)
         return element
 
