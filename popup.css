@@ -25,16 +25,22 @@ section {
     min-height: 35px;
     display: flex;
     align-items: center;
+    flex-direction: column;
 }
 
 .setting {
     display: flex;
     align-items: center;
     flex: 1;
+    width: 100%;
 }
 
 .setting-name {
     flex: 1;
+}
+
+.setting-info {
+    margin-bottom: 10px;
 }
 
 #see-all,
@@ -43,6 +49,7 @@ section {
     font-weight: bold;
 }
 
+#donate-list,
 #see-all,
 #see-all-list {
     display: none;
@@ -53,10 +60,14 @@ section {
     margin-top: -20px;
 }
 
+#donate-list .setting-control {
+    font-size: 0.7em;
+}
 footer {
     background-color: #eee;
     height: 40px;
     border-top: 1px solid #ddd;
+    display: flex;
 }
 
 .footer-button {
@@ -68,10 +79,13 @@ footer {
     cursor: pointer;
     text-decoration: none;
     color: black;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
 }
 
-.footer-button:first-child {
-    border-right: 1px solid #ddd;
+.footer-button:first-child,
+.footer-button:last-child {
+    border: 0;
 }
 
 .footer-button:hover {

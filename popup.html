@@ -35,20 +35,45 @@
             <section id="see-all-list">
                 <ul id="blocked-list"></ul>
             </section>
+            <section id="donate-list">
+                <div class="setting-info">
+                    Like this extension? If you would like to support the development, please donate
+                    using Bitcoin or Ethereum.
+                </div>
+                <div class="setting">
+                    <div class="setting-name">
+                        Bitcoin
+                    </div>
+                    <div class="setting-control">
+                        1ouLq9V9VnsLL13nw7KjqMt8qydQx7Q1E
+                    </div>
+                </div>
+                <div class="setting">
+                    <div class="setting-name">
+                        Ethereum
+                    </div>
+                    <div class="setting-control">
+                       0x34fbab4Fb1b09e1A85b845d346cD740C6748B408
+                    </div>
+                </div>
+            </section>
         </main>
         <footer>
             <a id="footer-github" class="footer-button" 
                href="https://github.com/mohamedmansour/fblock">GitHub
             </a>
+            <a id="footer-donate" class="footer-button">
+                Donate <span style="color: red;">&hearts;</span>
+            </a>
             <a id="footer-feedback" class="footer-button" href="https://twitter.com/mohamedmansour">
                 Send Feedback
             </a>
         </footer>
-        <div type-"template/text" id="tpl-blocked-item">
+        <script type="template/text" id="tpl-blocked-item">
             <img class="blocked-item-img" src="{thumbnail}" />
             <span class="blocked-item-name">{author}</span>
             <a class="blocked-item-url" href="{url}">show</a>
-        </div>
+        </script>
         <script type="application/javascript" src="scripts/popup.js"></script>
     </body>
 </html>
