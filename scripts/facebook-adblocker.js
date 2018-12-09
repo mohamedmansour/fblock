@@ -72,11 +72,11 @@
   }
 
   function findSponsoredPost(node) {
-    var iterator = findElementsByXPath('.//a[text()="Sponsored"]', node)
-    if (iterator.length)
-      return node
-    else
+    const role = node.querySelector('a[role="link"]')
+    if (!role) 
       return null
+
+    return getComputedStyle(role).display !== 'none' ? node : null
   }
 
   function removeSponsoredPostFeed(element) {
@@ -160,14 +160,14 @@
 
   function hideStaticSponsoredPosts() {
     var sponsoredIndex = 0,
-      sponsoredLinks = document.querySelectorAll('[data-testid="fbfeed_story"]')
+      sponsoredLinks = document.querySelectorAll('[data-referrer^="hyperfeed_story"]')
 
     for (sponsoredIndex = 0; sponsoredIndex < sponsoredLinks.length; sponsoredIndex++) {
       removeSponsoredPostFeed(
         findAttributeAncestor(
           findSponsoredPost(sponsoredLinks[sponsoredIndex]),
-          'data-testid',
-          'fbfeed_story'))
+          'data-referrer',
+          'hyperfeed_story'))
     }
   }
 
@@ -175,23 +175,13 @@
     removeSponsoredPostSidebar(document.querySelector('.ego_column'))
   }
 
-  function findElementsByXPath(xpath, parent) {
-    let results = [],
-       query = document.evaluate(xpath, parent, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
-
-    for (let i=0, length=query.snapshotLength; i<length; ++i) {
-      results.push(query.snapshotItem(i))
-    }
-
-    return results
-  }
-
   function findAttributeAncestor(element, attributeName, attributeValue) {
     if (!element)
       return null
 
     while (element != null && element != document) {
-      if (element.getAttribute(attributeName) == attributeValue)
+      const attr = element.getAttribute(attributeName)
+      if (attr && attr.startsWith(attributeValue) !== -1)
         return element
 
       element = element.parentNode
@@ -247,7 +237,7 @@
 
   // Main
   injectCss()
-  setupMessaging(function() {
+  setupMessaging(() => {
     console.log('AdBlocker for Facebook (fBlock) Activated! Currently ' + 
       (blockingEnabled ? 'enabled' : 'disabled'))
     hideDynamicSponsoredPosts()
