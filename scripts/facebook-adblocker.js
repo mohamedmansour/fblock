@@ -172,7 +172,7 @@
   }
 
   function hideStaticSponsoredBar() {
-    removeSponsoredPostSidebar(document.querySelector('.ego_column'))
+    removeSponsoredPostSidebar(document.querySelector('#pagelet_ego_pane'))
   }
 
   function findAttributeAncestor(element, attributeName, attributeValue) {
